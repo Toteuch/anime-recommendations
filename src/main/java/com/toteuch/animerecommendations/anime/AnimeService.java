@@ -28,11 +28,13 @@ public class AnimeService {
         try {
             AnimeDetailsRaw animeDetailsRaw = malApi.getAnimeDetails(animeId);
             List<Genre> genres = new ArrayList<>();
-            for (Map.Entry<Integer, String> entry : animeDetailsRaw.getGenres().entrySet()) {
-                Genre genre = genreRepository.findById(entry.getKey()).orElse(null);
-                if (genre == null) {
-                    genre = new Genre(entry.getKey(), entry.getValue());
-                    genres.add(genreRepository.save(genre));
+            if (animeDetailsRaw.getGenres() != null) {
+                for (Map.Entry<Integer, String> entry : animeDetailsRaw.getGenres().entrySet()) {
+                    Genre genre = genreRepository.findById(entry.getKey()).orElse(null);
+                    if (genre == null) {
+                        genre = new Genre(entry.getKey(), entry.getValue());
+                        genres.add(genreRepository.save(genre));
+                    }
                 }
             }
             Anime anime = animeRepository.findById(animeId).orElse(null);

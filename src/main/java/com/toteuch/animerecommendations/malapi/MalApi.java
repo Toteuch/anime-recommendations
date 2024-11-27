@@ -126,11 +126,13 @@ public class MalApi {
         animeDetailsRaw.setScore(animeDetailsResponse.getMean());
         animeDetailsRaw.setTitle(animeDetailsResponse.getTitle());
         animeDetailsRaw.setStatus(animeDetailsResponse.getStatus());
-        Map<Integer, String> genres = new HashMap<>();
-        for (GenreResponse genreResponse : animeDetailsResponse.getGenres()) {
-            genres.put(genreResponse.getId(), genreResponse.getName());
+        if (animeDetailsResponse.getGenres() != null) {
+            Map<Integer, String> genres = new HashMap<>();
+            for (GenreResponse genreResponse : animeDetailsResponse.getGenres()) {
+                genres.put(genreResponse.getId(), genreResponse.getName());
+            }
+            animeDetailsRaw.setGenres(genres);
         }
-        animeDetailsRaw.setGenres(genres);
         animeDetailsRaw.setNumEpisodes(animeDetailsResponse.getNumEpisodes());
         for (RelatedAnime relatedAnime : animeDetailsResponse.getRelatedAnimes()) {
             if (relatedAnime.getRelationType().equals("sequel")) {
