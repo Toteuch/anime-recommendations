@@ -67,7 +67,8 @@ public class AnimeService {
         anime = animeRepository.findTopByOrderByDetailsUpdateAsc();
         Calendar yesterdaySameTime = Calendar.getInstance();
         yesterdaySameTime.add(Calendar.HOUR, -24);
-        if (anime.getDetailsUpdate() != null && anime.getDetailsUpdate().before(yesterdaySameTime.getTime())) {
+
+        if (anime != null && anime.getDetailsUpdate() != null && anime.getDetailsUpdate().before(yesterdaySameTime.getTime())) {
             return anime;
         } else {
             return null;
