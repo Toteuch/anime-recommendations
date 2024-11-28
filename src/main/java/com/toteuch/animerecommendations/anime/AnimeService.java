@@ -32,9 +32,9 @@ public class AnimeService {
                 for (Map.Entry<Integer, String> entry : animeDetailsRaw.getGenres().entrySet()) {
                     Genre genre = genreRepository.findById(entry.getKey()).orElse(null);
                     if (genre == null) {
-                        genre = new Genre(entry.getKey(), entry.getValue());
-                        genres.add(genreRepository.save(genre));
+                        genre = genreRepository.save(new Genre(entry.getKey(), entry.getValue()));
                     }
+                    genres.add(genre);
                 }
             }
             Anime anime = animeRepository.findById(animeId).orElse(null);
@@ -73,10 +73,5 @@ public class AnimeService {
         } else {
             return null;
         }
-    }
-
-    private void testGetAnimeDetails() {
-        getAnimeDetails(52034);
-        getAnimeDetails(55791);
     }
 }
