@@ -147,4 +147,26 @@ public class UserProfileService {
             repo.save(userProfile);
         }
     }
+
+    public long getUserCount() {
+        return repo.count();
+    }
+
+    public long getUserAnimeScoreToGetCount() {
+        return repo.countByLastUpdateIsNull();
+    }
+
+    public Date getOldestUserUpdate() {
+        UserProfile up = repo.findTopByLastUpdateIsNotNullOrderByLastUpdate();
+        return up.getLastUpdate();
+    }
+
+    public Date getNewestLastSeenUser() {
+        UserProfile up = repo.findTopByOrderByLastSeen();
+        return up.getLastSeen();
+    }
+
+    public Double getLeastEligibleAffinity() {
+        return repo.findTopByAffinityGreaterThanOrderByAffinity(0.0, Limit.of(10000)).getAffinity();
+    }
 }

@@ -73,4 +73,12 @@ public class AnimeService {
         log.debug("Requesting anime with details older than {}", limitDate.getTime());
         return animeRepository.findTopByDetailsUpdateBeforeOrderByDetailsUpdateAsc(limitDate.getTime());
     }
+
+    public long getAnimeCount() {
+        return animeRepository.count();
+    }
+
+    public long getAnimeDetailsToGetCount() {
+        return animeRepository.countByDetailsUpdateIsNull();
+    }
 }

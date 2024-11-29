@@ -29,4 +29,12 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
 
     @Query("Select up from UserProfile up WHERE up.affinityUpdate < up.lastUpdate ORDER BY up.lastUpdate ASC LIMIT 1")
     UserProfile findTopByAffinityUpdateBeforeLastUpdateOrderByLastUpdate();
+
+    long countByLastUpdateIsNull();
+
+    UserProfile findTopByLastUpdateIsNotNullOrderByLastUpdate();
+
+    UserProfile findTopByOrderByLastSeen();
+
+    UserProfile findTopByAffinityGreaterThanOrderByAffinity(Double affinity, Limit limit);
 }

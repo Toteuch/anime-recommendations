@@ -10,4 +10,6 @@ public interface AnimeRepository extends JpaRepository<Anime, Integer> {
     Anime findTopByDetailsUpdateIsNull();
 
     Anime findTopByDetailsUpdateBeforeOrderByDetailsUpdateAsc(Date detailsUpdate);
+
+    long countByDetailsUpdateIsNull();
 }
