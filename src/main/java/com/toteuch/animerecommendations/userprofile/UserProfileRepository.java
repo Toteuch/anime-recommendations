@@ -5,22 +5,28 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface UserProfileRepository extends JpaRepository<UserProfile, String> {
     UserProfile findByUsername(String username);
 
-    List<UserProfile> findByOrderByLastSeenAsc(Limit limit);
+    List<UserProfile> findByOrderByAffinityAsc(Limit limit);
 
     List<UserProfile> findByAnimeRatedCount(int count);
 
-    UserProfile findTopByAnimeListSizeOrderByLastSeenAsc(int animeListSize);
-
     UserProfile findTopByOrderByLastUpdateAsc();
 
-    UserProfile findTopByAnimeRatedCountGreaterThanAndAffinityIsNullOrderByLastUpdateAsc(int animeRatedCount);
+    UserProfile findTopByLastUpdateIsNullOrderByLastSeen();
 
-    @Query("Select up from UserProfile up WHERE up.affinityUpdate < up.lastUpdate ")
-    UserProfile findAffinityToUpdate();
+    @Query("Select up from UserProfile up WHERE up.lastUpdate < up.lastSeen ORDER BY up.lastSeen ASC LIMIT 1")
+    UserProfile findTopByLastUpdateBeforeLastSeenOrderByLastSeen();
+
+    UserProfile findTopByLastUpdateBeforeOrderByLastUpdate(Date limitDate);
+
+    UserProfile findTopByAffinityIsNullAndLastUpdateIsNotNullOrderByLastUpdate();
+
+    @Query("Select up from UserProfile up WHERE up.affinityUpdate < up.lastUpdate ORDER BY up.lastUpdate ASC LIMIT 1")
+    UserProfile findTopByAffinityUpdateBeforeLastUpdateOrderByLastUpdate();
 }

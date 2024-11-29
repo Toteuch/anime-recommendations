@@ -73,7 +73,7 @@ public class MalApi {
         WebClient client = getWebClient();
         while (isSleepNeeded()) {
             try {
-                Thread.sleep(50);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -151,12 +151,20 @@ public class MalApi {
             log.debug("Requesting animelist of user {}, page {}", username, page);
             Mono<AnimelistUserResponse> response = requestMalPublicApiGetUserAnimeList(username, page);
             AnimelistUserResponse animelistUserResponse = response.block();
-            retVal.addAll(getUserAnimeScoreList(animelistUserResponse, username));
-            while (animelistUserResponse.getPaging().getNext() != null) {
-                page++;
-                log.debug("Requesting animelist of user {}, page {}", username, page);
-                animelistUserResponse = requestMalPublicApiGetUserAnimeList(username, page).block();
+            if (animelistUserResponse != null) {
                 retVal.addAll(getUserAnimeScoreList(animelistUserResponse, username));
+                while (animelistUserResponse != null && animelistUserResponse.getPaging().getNext() != null) {
+                    page++;
+                    log.debug("Requesting animelist of user {}, page {}", username, page);
+                    animelistUserResponse = requestMalPublicApiGetUserAnimeList(username, page).block();
+                    if (animelistUserResponse != null) {
+                        retVal.addAll(getUserAnimeScoreList(animelistUserResponse, username));
+                    } else {
+                        log.error("AnimeListUserResponse is null for the username {}, page {}", username, page);
+                    }
+                }
+            } else {
+                log.error("AnimeListUserResponse is null for the username {}, page {}", username, page);
             }
         } catch (WebClientResponseException e) {
             if (e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {

@@ -7,6 +7,7 @@ import com.toteuch.animerecommendations.malapi.exception.MalApiListNotFoundExcep
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,6 +17,9 @@ public class AnimeService {
 
     private static final Logger log = LoggerFactory.getLogger(AnimeService.class);
 
+    @Value("${app.anime.refreshLimitInDays}")
+    private Integer refreshLimitInDays;
+
     @Autowired
     private MalApi malApi;
     @Autowired
@@ -23,7 +27,7 @@ public class AnimeService {
     @Autowired
     private AnimeRepository animeRepository;
 
-    public void getAnimeDetails(int animeId) {
+    public void refreshAnimeDetails(int animeId) {
         log.debug("Getting details of anime {}", animeId);
         try {
             AnimeDetailsRaw animeDetailsRaw = malApi.getAnimeDetails(animeId);
@@ -55,7 +59,7 @@ public class AnimeService {
         } catch (MalApiListNotFoundException e) {
             log.warn("Anime {} is not found in MAL", animeId);
         } catch (MalApiException e) {
-            log.error("Unknow error {} when getting anime details of anime {} : {}", e.getStatusCode(), animeId, e.getMessage());
+            log.error("Unknown error {} when getting anime details of anime {} : {}", e.getStatusCode(), animeId, e.getMessage());
         }
     }
 
@@ -64,14 +68,9 @@ public class AnimeService {
         if (anime != null) {
             return anime;
         }
-        anime = animeRepository.findTopByOrderByDetailsUpdateAsc();
-        Calendar yesterdaySameTime = Calendar.getInstance();
-        yesterdaySameTime.add(Calendar.HOUR, -24);
-
-        if (anime != null && anime.getDetailsUpdate() != null && anime.getDetailsUpdate().before(yesterdaySameTime.getTime())) {
-            return anime;
-        } else {
-            return null;
-        }
+        Calendar limitDate = Calendar.getInstance();
+        limitDate.add(Calendar.DAY_OF_WEEK, -refreshLimitInDays);
+        log.debug("Requesting anime with details older than {}", limitDate.getTime());
+        return animeRepository.findTopByDetailsUpdateBeforeOrderByDetailsUpdateAsc(limitDate.getTime());
     }
 }

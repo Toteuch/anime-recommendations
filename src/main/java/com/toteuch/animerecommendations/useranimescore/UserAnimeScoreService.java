@@ -57,7 +57,7 @@ public class UserAnimeScoreService {
             userProfile.setAnimeRatedCount(userRatedAnimeCount);
             userProfile.setLastUpdate(new Date());
             userProfileRepository.save(userProfile);
-            log.debug("User {} updated : animeListSize {} | animeRatedCount {}",
+            log.info("User {} updated : animeListSize {} | animeRatedCount {}",
                     userProfile.getUsername(), userProfile.getAnimeListSize(), userProfile.getAnimeRatedCount());
         } catch (MalApiListVisibilityException e) {
             log.info("User {} has set its list visibility to private", userProfile.getUsername());
@@ -69,7 +69,7 @@ public class UserAnimeScoreService {
             log.info("Deleting user {}, not found", userProfile.getUsername());
             userProfileRepository.delete(userProfile);
         } catch (MalApiException e) {
-            log.error("Error while requesting animelist of user {} : {} - {}",
+            log.error("Error while requesting animeList of user {} : {} - {}",
                     userProfile.getUsername(), e.getStatusCode(), e.getMessage());
         }
     }
