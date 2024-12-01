@@ -1,11 +1,13 @@
 package com.toteuch.animerecommendations.malapi;
 
+import com.toteuch.animerecommendations.anime.AlternativeTitleType;
 import com.toteuch.animerecommendations.malapi.exception.MalApiException;
 import com.toteuch.animerecommendations.malapi.exception.MalApiListNotFoundException;
 import com.toteuch.animerecommendations.malapi.exception.MalApiListVisibilityException;
 import com.toteuch.animerecommendations.malapi.response.animedetails.AnimeDetailsResponse;
 import com.toteuch.animerecommendations.malapi.response.animedetails.GenreResponse;
-import com.toteuch.animerecommendations.malapi.response.animedetails.RelatedAnime;
+import com.toteuch.animerecommendations.malapi.response.animedetails.PictureResponse;
+import com.toteuch.animerecommendations.malapi.response.animedetails.RelatedAnimeResponse;
 import com.toteuch.animerecommendations.malapi.response.animelistuser.AnimelistUserResponse;
 import com.toteuch.animerecommendations.malapi.response.animelistuser.Data;
 import com.toteuch.animerecommendations.userprofile.UserProfileRepository;
@@ -40,6 +42,8 @@ public class MalApi {
     private String authHeaderKey;
     @Value("${app.malapi.auth.clientId}")
     private String authHeaderValue;
+    @Value("${app.anime.detailFields}")
+    private String animeDetailFields;
     @Autowired
     private UserProfileRepository userProfileRepo;
 
@@ -64,7 +68,7 @@ public class MalApi {
                 .uri(uriBuilder -> uriBuilder
                         .path("/anime/{animeId}")
                         .queryParam("fields", "{fields}")
-                        .build(animeId, "media_type,genres,status,mean,num_episodes,related_anime"))
+                        .build(animeId, animeDetailFields))
                 .retrieve()
                 .bodyToMono(AnimeDetailsResponse.class);
     }
@@ -134,12 +138,40 @@ public class MalApi {
             animeDetailsRaw.setGenres(genres);
         }
         animeDetailsRaw.setNumEpisodes(animeDetailsResponse.getNumEpisodes());
-        for (RelatedAnime relatedAnime : animeDetailsResponse.getRelatedAnimes()) {
-            if (relatedAnime.getRelationType().equals("sequel")) {
-                animeDetailsRaw.setSequelAnimeId(relatedAnime.getNode().getId());
-            } else if (relatedAnime.getRelationType().equals("prequel")) {
-                animeDetailsRaw.setPrequelAnimeId(relatedAnime.getNode().getId());
+        if (null != animeDetailsResponse.getRelatedAnimes()) {
+            for (RelatedAnimeResponse relatedAnimeResponse : animeDetailsResponse.getRelatedAnimes()) {
+                if (relatedAnimeResponse.getRelationType().equals("sequel")) {
+                    animeDetailsRaw.setSequelAnimeId(relatedAnimeResponse.getNode().getId());
+                } else if (relatedAnimeResponse.getRelationType().equals("prequel")) {
+                    animeDetailsRaw.setPrequelAnimeId(relatedAnimeResponse.getNode().getId());
+                }
             }
+        }
+        if (animeDetailsResponse.getMainPicture() != null) {
+            animeDetailsRaw.setMainPictureUrlMedium(animeDetailsResponse.getMainPicture().getMedium());
+        }
+        if (animeDetailsResponse.getAlternativeTitles() != null) {
+            Map<String, Object> alternativeTitles = new HashMap<>();
+            alternativeTitles.put(AlternativeTitleType.EN.name(), animeDetailsResponse.getAlternativeTitles().getEn());
+            alternativeTitles.put(AlternativeTitleType.JA.name(), animeDetailsResponse.getAlternativeTitles().getJa());
+            alternativeTitles.put(
+                    AlternativeTitleType.SYNONYM.name(), animeDetailsResponse.getAlternativeTitles().getSynonyms());
+            animeDetailsRaw.setAlternativeTitles(alternativeTitles);
+        }
+        animeDetailsRaw.setStartDate(animeDetailsResponse.getStartDate());
+        animeDetailsRaw.setEndDate(animeDetailsResponse.getEndDate());
+        if (animeDetailsResponse.getStartSeason() != null) {
+            animeDetailsRaw.setStartSeasonYear(animeDetailsResponse.getStartSeason().getYear());
+            animeDetailsRaw.setStartSeasonSeason(animeDetailsResponse.getStartSeason().getSeason());
+        }
+        animeDetailsRaw.setSource(animeDetailsResponse.getSource());
+        animeDetailsRaw.setRating(animeDetailsResponse.getRating());
+        if (animeDetailsResponse.getPictures() != null) {
+            List<String> pictureUrlsMedium = new ArrayList<>();
+            for (PictureResponse picture : animeDetailsResponse.getPictures()) {
+                pictureUrlsMedium.add(picture.getMedium());
+            }
+            animeDetailsRaw.setPictureUrlsMedium(pictureUrlsMedium);
         }
         return animeDetailsRaw;
     }

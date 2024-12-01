@@ -1,7 +1,7 @@
 package com.toteuch.animerecommendations.useranimescore;
 
-import com.toteuch.animerecommendations.anime.Anime;
-import com.toteuch.animerecommendations.anime.AnimeRepository;
+import com.toteuch.animerecommendations.anime.entities.Anime;
+import com.toteuch.animerecommendations.anime.repositories.AnimeRepository;
 import com.toteuch.animerecommendations.malapi.MalApi;
 import com.toteuch.animerecommendations.malapi.UserAnimeScoreRaw;
 import com.toteuch.animerecommendations.malapi.exception.MalApiException;

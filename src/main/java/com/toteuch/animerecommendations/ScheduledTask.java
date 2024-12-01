@@ -1,7 +1,7 @@
 package com.toteuch.animerecommendations;
 
-import com.toteuch.animerecommendations.anime.Anime;
 import com.toteuch.animerecommendations.anime.AnimeService;
+import com.toteuch.animerecommendations.anime.entities.Anime;
 import com.toteuch.animerecommendations.useranimescore.UserAnimeScoreService;
 import com.toteuch.animerecommendations.userprofile.UserProfile;
 import com.toteuch.animerecommendations.userprofile.UserProfileService;

@@ -3,12 +3,12 @@ package com.toteuch.animerecommendations.malapi.response.animedetails;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.toteuch.animerecommendations.malapi.response.Node;
 
-public class RelatedAnime {
+public class RelatedAnimeResponse {
     private Node node;
     @JsonProperty("relation_type")
     private String relationType;
 
-    public RelatedAnime() {
+    public RelatedAnimeResponse() {
     }
 
     public Node getNode() {

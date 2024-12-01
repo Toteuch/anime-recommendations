@@ -1,5 +1,6 @@
 package com.toteuch.animerecommendations.malapi;
 
+import java.util.List;
 import java.util.Map;
 
 public class AnimeDetailsRaw {
@@ -12,12 +13,20 @@ public class AnimeDetailsRaw {
     private Integer numEpisodes;
     private Integer prequelAnimeId;
     private Integer sequelAnimeId;
+    private String mainPictureUrlMedium;
+    private Map<String, Object> alternativeTitles;
+    private String startDate;
+    private String endDate;
+    private Integer startSeasonYear;
+    private String startSeasonSeason;
+    private String source;
+    private String rating;
+    private List<String> pictureUrlsMedium;
 
     public AnimeDetailsRaw() {
     }
 
-    public AnimeDetailsRaw(Integer id, String title, String mediaType, Map<Integer, String> genres,
-                           String status, Double score, Integer numEpisodes) {
+    public AnimeDetailsRaw(Integer id, String title, String mediaType, Map<Integer, String> genres, String status, Double score, Integer numEpisodes, Integer prequelAnimeId, Integer sequelAnimeId, String mainPictureUrlMedium, Map<String, Object> alternativeTitles, String startDate, String endDate, Integer startSeasonYear, String startSeasonSeason, String source, String rating, List<String> pictureUrlsMedium) {
         this.id = id;
         this.title = title;
         this.mediaType = mediaType;
@@ -25,6 +34,17 @@ public class AnimeDetailsRaw {
         this.status = status;
         this.score = score;
         this.numEpisodes = numEpisodes;
+        this.prequelAnimeId = prequelAnimeId;
+        this.sequelAnimeId = sequelAnimeId;
+        this.mainPictureUrlMedium = mainPictureUrlMedium;
+        this.alternativeTitles = alternativeTitles;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.startSeasonYear = startSeasonYear;
+        this.startSeasonSeason = startSeasonSeason;
+        this.source = source;
+        this.rating = rating;
+        this.pictureUrlsMedium = pictureUrlsMedium;
     }
 
     public Integer getId() {
@@ -97,5 +117,77 @@ public class AnimeDetailsRaw {
 
     public void setSequelAnimeId(Integer sequelAnimeId) {
         this.sequelAnimeId = sequelAnimeId;
+    }
+
+    public String getMainPictureUrlMedium() {
+        return mainPictureUrlMedium;
+    }
+
+    public void setMainPictureUrlMedium(String mainPictureUrlMedium) {
+        this.mainPictureUrlMedium = mainPictureUrlMedium;
+    }
+
+    public Map<String, Object> getAlternativeTitles() {
+        return alternativeTitles;
+    }
+
+    public void setAlternativeTitles(Map<String, Object> alternativeTitles) {
+        this.alternativeTitles = alternativeTitles;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Integer getStartSeasonYear() {
+        return startSeasonYear;
+    }
+
+    public void setStartSeasonYear(Integer startSeasonYear) {
+        this.startSeasonYear = startSeasonYear;
+    }
+
+    public String getStartSeasonSeason() {
+        return startSeasonSeason;
+    }
+
+    public void setStartSeasonSeason(String startSeasonSeason) {
+        this.startSeasonSeason = startSeasonSeason;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getRating() {
+        return rating;
+    }
+
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
+
+    public List<String> getPictureUrlsMedium() {
+        return pictureUrlsMedium;
+    }
+
+    public void setPictureUrlsMedium(List<String> pictureUrlsMedium) {
+        this.pictureUrlsMedium = pictureUrlsMedium;
     }
 }

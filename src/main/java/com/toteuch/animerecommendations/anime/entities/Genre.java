@@ -1,4 +1,4 @@
-package com.toteuch.animerecommendations.anime;
+package com.toteuch.animerecommendations.anime.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
