@@ -21,6 +21,9 @@ public class AnimeService {
 
     private static final Logger log = LoggerFactory.getLogger(AnimeService.class);
 
+    private static final SimpleDateFormat SDF_FULL = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat SDF_YM = new SimpleDateFormat("yyyy-MM");
+
     @Value("${app.anime.refreshLimitInDays}")
     private Integer refreshLimitInDays;
 
@@ -112,9 +115,20 @@ public class AnimeService {
                 }
                 anime.setPictureLinks(pictureLinks);
                 anime.setMainPictureMediumUrl(animeDetailsRaw.getMainPictureUrlMedium());
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                anime.setStartDate(animeDetailsRaw.getStartDate() != null ? sdf.parse(animeDetailsRaw.getStartDate()) : null);
-                anime.setEndDate(animeDetailsRaw.getEndDate() != null ? sdf.parse(animeDetailsRaw.getEndDate()) : null);
+                if (animeDetailsRaw.getStartDate() != null) {
+                    if (animeDetailsRaw.getStartDate().length() > 7) {
+                        anime.setStartDate(SDF_FULL.parse(animeDetailsRaw.getStartDate()));
+                    } else {
+                        anime.setStartDate(SDF_YM.parse(animeDetailsRaw.getStartDate()));
+                    }
+                }
+                if (animeDetailsRaw.getEndDate() != null) {
+                    if (animeDetailsRaw.getEndDate().length() > 7) {
+                        anime.setEndDate(SDF_FULL.parse(animeDetailsRaw.getEndDate()));
+                    } else {
+                        anime.setEndDate(SDF_YM.parse(animeDetailsRaw.getEndDate()));
+                    }
+                }
                 anime.setSource(animeDetailsRaw.getSource());
                 anime.setRating(animeDetailsRaw.getRating());
                 anime.setStatus(animeDetailsRaw.getStatus());
