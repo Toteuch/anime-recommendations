@@ -34,7 +34,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
 
     UserProfile findTopByLastUpdateIsNotNullOrderByLastUpdate();
 
-    UserProfile findTopByOrderByLastSeen();
+    UserProfile findTopByOrderByLastSeenDesc();
 
     UserProfile findTopByAffinityGreaterThanOrderByAffinity(Double affinity, Limit limit);
 }

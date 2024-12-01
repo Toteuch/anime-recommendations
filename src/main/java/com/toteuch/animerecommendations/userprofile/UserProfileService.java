@@ -162,7 +162,7 @@ public class UserProfileService {
     }
 
     public Date getNewestLastSeenUser() {
-        UserProfile up = repo.findTopByOrderByLastSeen();
+        UserProfile up = repo.findTopByOrderByLastSeenDesc();
         return up.getLastSeen();
     }
 
