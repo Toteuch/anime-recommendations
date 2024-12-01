@@ -23,6 +23,7 @@ public class AnimeService {
 
     private static final SimpleDateFormat SDF_FULL = new SimpleDateFormat("yyyy-MM-dd");
     private static final SimpleDateFormat SDF_YM = new SimpleDateFormat("yyyy-MM");
+    private static final SimpleDateFormat SDF_Y = new SimpleDateFormat("yyyy");
 
     @Value("${app.anime.refreshLimitInDays}")
     private Integer refreshLimitInDays;
@@ -118,15 +119,19 @@ public class AnimeService {
                 if (animeDetailsRaw.getStartDate() != null) {
                     if (animeDetailsRaw.getStartDate().length() > 7) {
                         anime.setStartDate(SDF_FULL.parse(animeDetailsRaw.getStartDate()));
-                    } else {
+                    } else if (animeDetailsRaw.getStartDate().length() > 4) {
                         anime.setStartDate(SDF_YM.parse(animeDetailsRaw.getStartDate()));
+                    } else {
+                        anime.setStartDate(SDF_Y.parse(animeDetailsRaw.getStartDate()));
                     }
                 }
                 if (animeDetailsRaw.getEndDate() != null) {
                     if (animeDetailsRaw.getEndDate().length() > 7) {
                         anime.setEndDate(SDF_FULL.parse(animeDetailsRaw.getEndDate()));
-                    } else {
+                    } else if (animeDetailsRaw.getEndDate().length() > 4) {
                         anime.setEndDate(SDF_YM.parse(animeDetailsRaw.getEndDate()));
+                    } else {
+                        anime.setEndDate(SDF_Y.parse(animeDetailsRaw.getEndDate()));
                     }
                 }
                 anime.setSource(animeDetailsRaw.getSource());
