@@ -103,7 +103,7 @@ public class UserProfileService {
         if (userProfileCount > userProfileLimitCount) {
             List<UserProfile> userProfileToDelete = repo.findByAnimeRatedCount(0);
             log.info("Deleting {} UserProfile with animeRatedCount set to 0", userProfileToDelete.size());
-            userProfileToDelete.forEach(u -> repo.delete(u));
+            userProfileToDelete.forEach(this::deleteUserProfile);
         }
         userProfileCount = repo.count();
         log.debug("UserProfile count is {}", userProfileCount);
@@ -111,7 +111,7 @@ public class UserProfileService {
             long countToDelete = userProfileCount - userProfileLimitCount;
             List<UserProfile> userProfileToDelete = repo.findByOrderByAffinityAsc(Limit.of((int) countToDelete));
             log.info("Deleting {} UserProfile with the least affinity with referenceUser", userProfileToDelete.size());
-            userProfileToDelete.forEach(u -> repo.delete(u));
+            userProfileToDelete.forEach(this::deleteUserProfile);
         }
         userProfileCount = repo.count();
         log.debug("UserProfile count is {}", userProfileCount);
@@ -136,6 +136,12 @@ public class UserProfileService {
             }
         }
         log.info("UserProfile created : {} | UserProfile updated : {}", created, updated);
+    }
+
+    private void deleteUserProfile(UserProfile up) {
+        List<UserAnimeScore> scores = userAnimeScoreRepository.findByUserProfile(up);
+        scores.forEach(s -> userAnimeScoreRepository.delete(s));
+        repo.delete(up);
     }
 
     @PostConstruct
