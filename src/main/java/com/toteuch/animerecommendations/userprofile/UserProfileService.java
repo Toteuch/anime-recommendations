@@ -138,9 +138,15 @@ public class UserProfileService {
         log.info("UserProfile created : {} | UserProfile updated : {}", created, updated);
     }
 
-    private void deleteUserProfile(UserProfile up) {
+    public UserProfile save(UserProfile userProfile) {
+        return repo.save(userProfile);
+    }
+
+    public void deleteUserProfile(UserProfile up) {
         List<UserAnimeScore> scores = userAnimeScoreRepository.findByUserProfile(up);
+        log.info("Deleting {} userAnimeScore records for user {}", scores.size(), up.getUsername());
         scores.forEach(s -> userAnimeScoreRepository.delete(s));
+        log.info("Deleting user {}", up.getUsername());
         repo.delete(up);
     }
 

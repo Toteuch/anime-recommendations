@@ -8,7 +8,7 @@ import com.toteuch.animerecommendations.malapi.exception.MalApiException;
 import com.toteuch.animerecommendations.malapi.exception.MalApiListNotFoundException;
 import com.toteuch.animerecommendations.malapi.exception.MalApiListVisibilityException;
 import com.toteuch.animerecommendations.userprofile.UserProfile;
-import com.toteuch.animerecommendations.userprofile.UserProfileRepository;
+import com.toteuch.animerecommendations.userprofile.UserProfileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class UserAnimeScoreService {
     @Autowired
     private MalApi malApi;
     @Autowired
-    private UserProfileRepository userProfileRepository;
+    private UserProfileService userProfileService;
     @Autowired
     private AnimeRepository animeRepository;
     @Autowired
@@ -56,7 +56,7 @@ public class UserAnimeScoreService {
             userProfile.setAnimeListSize(userAnimeCount);
             userProfile.setAnimeRatedCount(userRatedAnimeCount);
             userProfile.setLastUpdate(new Date());
-            userProfileRepository.save(userProfile);
+            userProfileService.save(userProfile);
             log.info("User {} updated : animeListSize {} | animeRatedCount {}",
                     userProfile.getUsername(), userProfile.getAnimeListSize(), userProfile.getAnimeRatedCount());
         } catch (MalApiListVisibilityException e) {
@@ -64,10 +64,10 @@ public class UserAnimeScoreService {
             userProfile.setAnimeRatedCount(0);
             userProfile.setAnimeListSize(0);
             userProfile.setLastUpdate(new Date());
-            userProfileRepository.save(userProfile);
+            userProfileService.save(userProfile);
         } catch (MalApiListNotFoundException e) {
             log.info("Deleting user {}, not found", userProfile.getUsername());
-            userProfileRepository.delete(userProfile);
+            userProfileService.deleteUserProfile(userProfile);
         } catch (MalApiException e) {
             log.error("Error while requesting animeList of user {} : {} - {}",
                     userProfile.getUsername(), e.getStatusCode(), e.getMessage());
